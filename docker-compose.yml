@@ -1,0 +1,44 @@
+version: "2"
+services:
+  postgres:
+    image: "postgres:latest"
+    volumes:
+      - ./data/postgre/db:/data/db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=gonode
+    networks:
+      - postgres-compose-network
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "123456"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres-compose-network
+  node:
+    image: "node:latest"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - "8080:8080"
+    command: "npm start"
+    links:
+      - postgres
+    networks:
+      - postgres-compose-network
+
+networks:
+  postgres-compose-network:
+    driver: bridge
