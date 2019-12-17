@@ -10,6 +10,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3334
 
 CMD ["/init.sh"]
