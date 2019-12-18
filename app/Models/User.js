@@ -31,6 +31,11 @@ class User extends Model {
    *
    * @return {Object}
    */
+
+  addresses () {
+    return this.hasMany('App/Models/UserAddress')
+  }
+
   tokens () {
     return this.hasMany('App/Models/Token')
   }
@@ -41,6 +46,13 @@ class User extends Model {
 
   tasks () {
     this.hasMany('App/Models/Task')
+  }
+
+  static get traits () {
+    return [
+      '@provider:Adonis/Acl/HasRole',
+      '@provider:Adonis/Acl/HasPermission'
+    ]
   }
 }
 

@@ -2,7 +2,8 @@
 const Env = use('Env')
 const Youch = use('youch')
 const BaseExceptionHandler = use('BaseExceptionHandler')
-
+const Config = use('Config')
+const Sentry = require('@sentry/node')
 /**
  * This class handles all exceptions thrown during
  * the HTTP request lifecycle.
@@ -45,7 +46,12 @@ class ExceptionHandler extends BaseExceptionHandler {
    * @return {void}
    */
   async report (error, { request }) {
-    console.log(error)
+    if (Env.get('NODE_ENV') === 'development') {
+      console.log(error)
+    } else {
+      Sentry.init({ dns: Config.get('services.sentry.dsn') })
+      Sentry.captureException(error)
+    }
   }
 }
 
